@@ -8,9 +8,12 @@
 	},
 	"dependencies": {
 		"fast-html-parser": "^1.0.1",
+		"jssoup": "0.0.6",
 		"react": "16.0.0-beta.5",
 		"react-native": "0.49.5",
-		"react-native-html-parser": "0.0.5"
+		"react-native-elements": "^0.18.2",
+		"react-native-html-parser": "0.0.5",
+		"react-native-vector-icons": "^4.4.2"
 	},
 	"devDependencies": {
 		"babel-jest": "21.2.0",

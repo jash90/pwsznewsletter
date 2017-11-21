@@ -1,73 +1,90 @@
-import React, {
-  Component,
-} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  WebView,
-} from 'react-native'
-
-
-var DomParser = require('react-native-html-parser').DOMParser
-
-
+import React, {Component} from 'react';
+import {View, StyleSheet, TextInput, WebView, Alert} from 'react-native'
+import JSSoup from 'jssoup';
+import {Button, List, ListItem, Text, Header} from 'react-native-elements';
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      aktualnosci: [],
+      pager:[],
+    }
+  }
   componentDidMount() {
-    let html = `<html>
-                    <body>
-                        <div id="b">
-                            <a href="example.org">
-                            <div class="inA">
-                                <br>bbbb</br>
-                            </div>
-                        </div>
-                        <div class="bb">
-                            Test
-                        </div>
-                    </body>
-                </html>`
-    let doc = new DomParser().parseFromString(html, 'text/html')
-
-    console.log(doc.querySelect('#b .inA'))
-    console.log(doc.getElementsByTagName('a'))
-    console.log(doc.querySelect('#b a[href="example.org"]'))
+    fetch('http://www.pwsz.krosno.pl/uczelnia/aktualnosci/').then((responseJson) => {
+      var site = new JSSoup(responseJson._bodyInit);
+      this.setState({
+        aktualnosci: site.findAll('div', 'aktualnosci-margines')
+      });
+      this.setState({
+        pager:site.findAll('div','pager')
+      });
+      //alert(this.state.pager.find('a').text);
+      // for (var i = 0; i < this.state.aktualnosci.length; i++) {
+      //   alert(this.state.aktualnosci[i].find('div', 'data').text);
+      // }
+    }).catch((error) => {
+      console.error(error);
+    });
   }
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {"jdfghkdf"}
-        </Text>
+      <View>
+        <Header
+          leftComponent={{
+          icon: 'menu',
+          color: '#fff'
+        }}
+          centerComponent={{
+          text: 'PWSZNewsletter',
+          style: {
+            color: '#fff'
+          }
+        }}
+        backgroundColor={'red'}
+        />
+        <List>
+          {this
+            .state
+            .aktualnosci
+            .map((item, i) => (<ListItem
+              roundAvatar
+              avatar={{
+              uri: 'http://www.pwsz.krosno.pl' + item
+                .find('img')
+                .attrs
+                .src
+            }}
+              subtitle={item
+              .find('div', 'data')
+              .text}
+              key={i}
+              title={item
+              .find('h3')
+              .text}/>))
+}
+        </List>
       </View>
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#F5FCFF'
   },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
-    margin: 10,
+    margin: 10
   },
   instructions: {
     textAlign: 'center',
     color: '#333333',
-    marginBottom: 5,
-  },
+    marginBottom: 5
+  }
 });
 export default App;
