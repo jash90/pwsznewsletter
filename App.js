@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
-import {View, StyleSheet, TextInput, WebView, Alert} from 'react-native'
+import React, { Component } from 'react';
+import { View, StyleSheet, TextInput, WebView, Alert, FlatList } from 'react-native'
 import JSSoup from 'jssoup';
-import {Button, List, ListItem, Text, Header} from 'react-native-elements';
+import { Button, List, ListItem, Text, Header } from 'react-native-elements';
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       aktualnosci: [],
-      pager:[],
+      pager: []
     }
   }
   componentDidMount() {
@@ -17,12 +17,9 @@ class App extends Component {
         aktualnosci: site.findAll('div', 'aktualnosci-margines')
       });
       this.setState({
-        pager:site.findAll('div','pager')
+        pager: site.findAll('div', 'pager')
       });
-      //alert(this.state.pager.find('a').text);
-      // for (var i = 0; i < this.state.aktualnosci.length; i++) {
-      //   alert(this.state.aktualnosci[i].find('div', 'data').text);
-      // }
+   //   alert(this.state.pager.find('b').text);
     }).catch((error) => {
       console.error(error);
     });
@@ -32,17 +29,16 @@ class App extends Component {
       <View>
         <Header
           leftComponent={{
-          icon: 'menu',
-          color: '#fff'
-        }}
-          centerComponent={{
-          text: 'PWSZNewsletter',
-          style: {
+            icon: 'menu',
             color: '#fff'
-          }
-        }}
-        backgroundColor={'red'}
-        />
+          }}
+          centerComponent={{
+            text: 'PWSZNewsletter',
+            style: {
+              color: '#fff'
+            }
+          }}
+          backgroundColor={'red'} />
         <List>
           {this
             .state
@@ -50,20 +46,21 @@ class App extends Component {
             .map((item, i) => (<ListItem
               roundAvatar
               avatar={{
-              uri: 'http://www.pwsz.krosno.pl' + item
-                .find('img')
-                .attrs
-                .src
-            }}
-              subtitle={item
-              .find('div', 'data')
-              .text}
+                uri: 'http://www.pwsz.krosno.pl' + item
+                  .find('img')
+                  .attrs
+                  .src
+              }}
+              subtitle={item.find('div','data').text+'\n'+item.text.substring(item.text.lastIndexOf('\n')).trim()}
               key={i}
               title={item
-              .find('h3')
-              .text}/>))
-}
+                .find('h3')
+                .text} />))
+          }
         </List>
+        <View>
+          <Text>{"jhgj"}</Text>
+        </View>
       </View>
     );
   }
