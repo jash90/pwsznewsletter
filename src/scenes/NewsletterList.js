@@ -23,7 +23,6 @@ class NewsletterList extends Component {
       this.setState({
         pager: site.findAll('div', 'pager')
       });
-      //alert(this.state.aktualnosci[0]);
       this.setState({ dataSource: ds.cloneWithRows(this.state.aktualnosci) });
     }).catch((error) => {
       console.error(error);
@@ -94,7 +93,7 @@ class NewsletterList extends Component {
     Actions.Newsletter({
       title: item.find('h3').text,
       date: item.find('div', 'data').text,
-      content: item.prettify(),
+      site: 'http://www.pwsz.krosno.pl'+item.find('h3').find('a').attrs.href,
       imgUri: 'http://www.pwsz.krosno.pl' + item.find('img').attrs.src
     });
   }
